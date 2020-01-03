@@ -4,16 +4,16 @@ import lombok.val;
 import org.apache.commons.cli.*;
 
 public class CommandLineController {
-    public static final long DEFAULT_TIMEOUT = 30;
-
     private final CommandLineParser parser;
     private final Options options;
     private final HelpFormatter formatter;
+    private final ConfigProvider provider;
 
-    public CommandLineController(CommandLineParser parser, Options options, HelpFormatter formatter) {
+    public CommandLineController(CommandLineParser parser, Options options, HelpFormatter formatter, ConfigProvider provider) {
         this.parser = parser;
         this.options = options;
         this.formatter = formatter;
+        this.provider = provider;
     }
 
     HttpGunOptions parse(String[] args) throws ParseException {
@@ -23,7 +23,7 @@ public class CommandLineController {
         val num = (Long) line.getParsedOptionValue("num");
         val concurrency = (Long) line.getParsedOptionValue("concurrency");
 
-        var timeout = DEFAULT_TIMEOUT;
+        var timeout = provider.get("default_timeout", Long.class);
         if (line.hasOption("timeout")) {
             timeout = (Long) line.getParsedOptionValue("timeout");
         }

@@ -23,7 +23,7 @@ public class HttpGun {
     public static final int EXIT_SUCCESS = 0;
     public static final double MILLISECOND = 1000.0;
 
-    public static final String EXCEPTION = "Unexpected exception: {}";
+    public static final String EXCEPTION_MSG = "Unexpected exception: {}";
 
     public static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
@@ -69,7 +69,7 @@ public class HttpGun {
                 } catch (IOException e) {
                     watch.stop();
                     fails.incrementAndGet();
-                    logger.error(EXCEPTION, e.getMessage());
+                    logger.error(EXCEPTION_MSG, e.getMessage());
                 }
             }));
 
@@ -93,9 +93,9 @@ public class HttpGun {
             System.exit(EXIT_SUCCESS);
         } catch (ParseException e) {
             controller.printHelp();
-            logger.error(EXCEPTION, e.getMessage());
+            logger.error(EXCEPTION_MSG, e.getMessage());
         } catch (InterruptedException e) {
-            logger.error(EXCEPTION, e.getMessage());
+            logger.error(EXCEPTION_MSG, e.getMessage());
             Thread.currentThread().interrupt();
         }
     }
@@ -108,8 +108,9 @@ public class HttpGun {
         initOptions(options);
 
         val formatter = new HelpFormatter();
+        val provider = new ConfigProvider();
 
-        return new CommandLineController(parser, options, formatter);
+        return new CommandLineController(parser, options, formatter, provider);
     }
 
     private static void initOptions(Options options) {

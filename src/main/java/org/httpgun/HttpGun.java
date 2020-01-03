@@ -5,6 +5,7 @@ import lombok.val;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.apache.commons.cli.*;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.LongStream;
 
 public class HttpGun {
-    public static final long DEFAULT_TIMEOUT = 30;
     public static final int EXIT_SUCCESS = 0;
     public static final double MILLISECOND = 1000.0;
 
@@ -28,60 +28,15 @@ public class HttpGun {
     public static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
     public static void main(String[] args) {
-        val parser = new DefaultParser();
-
-        val options = new Options();
-        options.addOption(
-            Option
-                .builder()
-                .longOpt("url")
-                .desc("Attack URL")
-                .hasArg()
-                .type(String.class)
-                .required()
-                .build()
-        );
-        options.addOption(
-            Option
-                .builder()
-                .longOpt("num")
-                .desc("Total amount of requests")
-                .hasArg()
-                .type(Number.class)
-                .required()
-                .build()
-        );
-        options.addOption(
-            Option
-                .builder()
-                .longOpt("concurrency")
-                .desc("Total amount of threads")
-                .hasArg()
-                .type(Number.class)
-                .required()
-                .build()
-        );
-        options.addOption(
-            Option
-                .builder()
-                .longOpt("timeout")
-                .desc("Request timeout (defaults to 30s)")
-                .hasArg()
-                .type(Number.class)
-                .build()
-        );
+        CommandLineController controller = createController();
 
         try {
-            CommandLine line = parser.parse(options, args);
+            val options = controller.parse(args);
 
-            val url = (String) line.getParsedOptionValue("url");
-            val num = (Long) line.getParsedOptionValue("num");
-            val concurrency = (Long) line.getParsedOptionValue("concurrency");
-
-            var timeout = DEFAULT_TIMEOUT;
-            if (line.hasOption("timeout")) {
-                timeout = (Long) line.getParsedOptionValue("timeout");
-            }
+            val url = options.getUrl();
+            val num = options.getNum();
+            val concurrency = options.getConcurrency();
+            val timeout = options.getTimeout();
 
             val client = new OkHttpClient.Builder().callTimeout(timeout, TimeUnit.SECONDS).build();
             val request = new Request.Builder().url(String.format("https://%s", url)).build();
@@ -137,12 +92,65 @@ public class HttpGun {
 
             System.exit(EXIT_SUCCESS);
         } catch (ParseException e) {
-            val formatter = new HelpFormatter();
-            formatter.printHelp("httpgun", options, true);
+            controller.printHelp();
             logger.error(EXCEPTION, e.getMessage());
         } catch (InterruptedException e) {
             logger.error(EXCEPTION, e.getMessage());
             Thread.currentThread().interrupt();
         }
+    }
+
+    @NotNull
+    private static CommandLineController createController() {
+        val parser = new DefaultParser();
+
+        val options = new Options();
+        initOptions(options);
+
+        val formatter = new HelpFormatter();
+
+        return new CommandLineController(parser, options, formatter);
+    }
+
+    private static void initOptions(Options options) {
+        options.addOption(
+            Option
+                .builder()
+                .longOpt("url")
+                .desc("Attack URL")
+                .hasArg()
+                .type(String.class)
+                .required()
+                .build()
+        );
+        options.addOption(
+            Option
+                .builder()
+                .longOpt("num")
+                .desc("Total amount of requests")
+                .hasArg()
+                .type(Number.class)
+                .required()
+                .build()
+        );
+        options.addOption(
+            Option
+                .builder()
+                .longOpt("concurrency")
+                .desc("Total amount of threads")
+                .hasArg()
+                .type(Number.class)
+                .required()
+                .build()
+        );
+        options.addOption(
+            Option
+                .builder()
+                .longOpt("timeout")
+                .desc("Request timeout (defaults to 30s)")
+                .hasArg()
+                .type(Number.class)
+                .build()
+        );
     }
 }

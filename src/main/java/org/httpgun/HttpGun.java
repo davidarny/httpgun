@@ -36,6 +36,9 @@ public class HttpGun {
 
             val attacker = new HttpAttacker(options, config, factory);
             val stats = attacker.attack();
+
+            total.stop();
+
             val fails = stats.getFails();
             val sum = stats.getTimersSum();
             val average = stats.getTimersAverage();
@@ -43,7 +46,6 @@ public class HttpGun {
             logger.info("\n\n==================== REPORT ====================\n");
 
             logger.info("Concurrency Level: {}", concurrency);
-            total.stop();
             logger.info("Total time: {}s", StringUtils.friendlyDouble(total.elapsed(TimeUnit.MILLISECONDS) / MILLISECOND));
             logger.info("Total requests: {}", num);
             logger.info("Total fails: {}", fails);

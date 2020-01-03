@@ -49,15 +49,18 @@ public class HttpAttacker {
             val watch = Stopwatch.createStarted();
             try {
                 val response = caller.call();
+
                 watch.stop();
+
                 long elapsed = watch.elapsed(TimeUnit.MILLISECONDS);
-                stats.addTimer(elapsed);
 
                 if (!response.isSuccessful()) {
                     logger.info("Fail #{} in {}ms", index.incrementAndGet(), elapsed);
                     stats.incrementFails();
                     return;
                 }
+
+                stats.addTimer(elapsed);
 
                 logger.info("Success #{} in {}ms", index.incrementAndGet(), elapsed);
                 stats.incrementSuccesses();

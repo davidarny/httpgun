@@ -49,7 +49,7 @@ public class HttpGun {
             logger.info("Total time: {}s", StringUtils.friendlyDouble(total.elapsed(TimeUnit.MILLISECONDS) / MILLISECOND));
             logger.info("Total requests: {}", num);
             logger.info("Total fails: {}", fails);
-            logger.info("Total RPS: {}s", StringUtils.friendlyDouble(sum / concurrency / MILLISECOND));
+            logger.info("Total RPS: {}", StringUtils.friendlyDouble(sum / concurrency / MILLISECOND));
             if (average.isPresent()) {
                 logger.info("Average response time: {}ms", StringUtils.friendlyDouble(average.getAsDouble()));
             }

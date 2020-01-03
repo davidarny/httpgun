@@ -4,6 +4,7 @@ import com.google.common.base.Stopwatch;
 import lombok.val;
 import org.apache.commons.cli.*;
 import org.httpgun.attacker.HttpAttacker;
+import org.httpgun.caller.OkHttpCallerFactory;
 import org.httpgun.config.ConfigProvider;
 import org.httpgun.config.PropertiesFileConfigProvider;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ public class HttpGun {
     public static void main(String[] args) {
         val config = new PropertiesFileConfigProvider();
         val controller = createController(config);
+        val factory = new OkHttpCallerFactory();
 
         try {
             val options = controller.parse(args);
@@ -32,7 +34,7 @@ public class HttpGun {
 
             logger.info("\n\n==================== ATTACK {} ====================\n", url);
 
-            val attacker = new HttpAttacker(options, config);
+            val attacker = new HttpAttacker(options, config, factory);
             val stats = attacker.attack();
             val fails = stats.getFails();
             val sum = stats.getTimersSum();

@@ -8,13 +8,13 @@ public class CommandLineController {
     private final CommandLineParser parser;
     private final Options options;
     private final HelpFormatter formatter;
-    private final ConfigProvider provider;
+    private final ConfigProvider config;
 
-    public CommandLineController(CommandLineParser parser, Options options, HelpFormatter formatter, ConfigProvider provider) {
+    public CommandLineController(CommandLineParser parser, Options options, HelpFormatter formatter, ConfigProvider config) {
         this.parser = parser;
         this.options = options;
         this.formatter = formatter;
-        this.provider = provider;
+        this.config = config;
     }
 
     HttpGunOptions parse(String[] args) throws ParseException {
@@ -24,7 +24,7 @@ public class CommandLineController {
         val num = (Long) line.getParsedOptionValue("num");
         val concurrency = (Long) line.getParsedOptionValue("concurrency");
 
-        var timeout = provider.get("default_timeout", Long.class);
+        var timeout = config.get("default_timeout", Long.class);
         if (line.hasOption("timeout")) {
             timeout = (Long) line.getParsedOptionValue("timeout");
         }
@@ -33,7 +33,7 @@ public class CommandLineController {
     }
 
     void printHelp() {
-        val syntax = provider.get("cmd_syntax", String.class);
+        val syntax = config.get("cmd_syntax", String.class);
         formatter.printHelp(syntax, options);
     }
 }

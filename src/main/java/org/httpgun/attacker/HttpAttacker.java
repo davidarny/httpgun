@@ -47,8 +47,8 @@ public class HttpAttacker {
 
         range.forEach(i -> pool.execute(() -> {
             val watch = Stopwatch.createStarted();
-
-            try (val response = caller.call()) {
+            try {
+                val response = caller.call();
                 watch.stop();
                 long elapsed = watch.elapsed(TimeUnit.MILLISECONDS);
                 stats.addTimer(elapsed);

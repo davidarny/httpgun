@@ -1,8 +1,9 @@
 package org.httpgun.caller;
 
+import lombok.Cleanup;
+import lombok.val;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +17,8 @@ public class OkHttpCaller implements HttpCaller {
         request = new Request.Builder().url(String.format("https://%s", url)).build();
     }
 
-    public Response call() throws IOException {
-        return client.newCall(request).execute();
+    public HttpResponse call() throws IOException {
+        @Cleanup val response = client.newCall(request).execute();
+        return new HttpResponse(response.isSuccessful());
     }
 }

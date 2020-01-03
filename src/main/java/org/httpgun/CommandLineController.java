@@ -2,6 +2,7 @@ package org.httpgun;
 
 import lombok.val;
 import org.apache.commons.cli.*;
+import org.httpgun.config.ConfigProvider;
 
 public class CommandLineController {
     private final CommandLineParser parser;

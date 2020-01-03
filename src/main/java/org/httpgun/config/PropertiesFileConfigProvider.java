@@ -1,12 +1,13 @@
-package org.httpgun;
+package org.httpgun.config;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
-public class ConfigProvider {
+public class PropertiesFileConfigProvider implements ConfigProvider {
     public final Config config = ConfigFactory.load();
 
-    <T> T get(String path, Class<T> clazz) {
+    @Override
+    public <T> T get(String path, Class<T> clazz) {
         if (clazz == Long.class) {
             return clazz.cast(config.getLong(path));
         } else if (clazz == Integer.class) {

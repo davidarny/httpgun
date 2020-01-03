@@ -5,6 +5,7 @@ import lombok.val;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.apache.commons.cli.*;
+import org.httpgun.config.PropertiesFileConfigProvider;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,7 +109,7 @@ public class HttpGun {
         initOptions(options);
 
         val formatter = new HelpFormatter();
-        val provider = new ConfigProvider();
+        val provider = new PropertiesFileConfigProvider();
 
         return new CommandLineController(parser, options, formatter, provider);
     }

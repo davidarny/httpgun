@@ -32,6 +32,7 @@ public class CommandLineController {
     }
 
     void printHelp() {
-        formatter.printHelp("httpgun", options);
+        val syntax = provider.get("cmd_syntax", String.class);
+        formatter.printHelp(syntax, options);
     }
 }

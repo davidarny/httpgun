@@ -2,13 +2,15 @@ package org.httpgun.attacker;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class HttpAttackerStats {
     private final List<Long> timers = Collections.synchronizedList(new ArrayList<>());
     private final AtomicInteger successes = new AtomicInteger();
     private final AtomicInteger fails = new AtomicInteger();
+    private final AtomicLong totalBytesCount = new AtomicLong();
 
-    void addTimer(Long time) {
+    void addTimer(long time) {
         timers.add(time);
     }
 
@@ -30,6 +32,14 @@ public class HttpAttackerStats {
 
     public long getTimersSum() {
         return timers.stream().mapToLong(Long::longValue).sum();
+    }
+
+    public void addBytes(long count) {
+        totalBytesCount.addAndGet(count);
+    }
+
+    public long getTotalBytesCount() {
+        return totalBytesCount.get();
     }
 
     public OptionalDouble getTimersAverage() {

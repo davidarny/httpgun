@@ -42,6 +42,7 @@ public class HttpGun {
             val fails = stats.getFails();
             val sum = stats.getTimersSum();
             val average = stats.getTimersAverage();
+            val bytes = stats.getTotalBytesCount();
 
             logger.info("\n\n==================== REPORT ====================\n");
 
@@ -50,6 +51,7 @@ public class HttpGun {
             logger.info("Total requests: {}", num);
             logger.info("Total fails: {}", fails);
             logger.info("Total RPS: {}", StringUtils.friendlyDouble(sum / concurrency / MILLISECOND));
+            logger.info("Total bytes transmitted: {}", bytes);
             if (average.isPresent()) {
                 logger.info("Average response time: {}ms", StringUtils.friendlyDouble(average.getAsDouble()));
             }

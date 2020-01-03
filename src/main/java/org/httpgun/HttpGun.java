@@ -6,15 +6,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.apache.commons.cli.*;
 import org.httpgun.config.PropertiesFileConfigProvider;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.OptionalDouble;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -90,6 +87,12 @@ public class HttpGun {
             if (average.isPresent()) {
                 logger.info("Average response time: {}ms", StringUtils.friendlyDouble(average.getAsDouble()));
             }
+            logger.info("50%: {}ms", percentile(timers, 50));
+            logger.info("80%: {}ms", percentile(timers, 80));
+            logger.info("90%: {}ms", percentile(timers, 90));
+            logger.info("95%: {}ms", percentile(timers, 95));
+            logger.info("99%: {}ms", percentile(timers, 99));
+            logger.info("100%: {}ms", percentile(timers, 100));
 
             System.exit(EXIT_SUCCESS);
         } catch (ParseException e) {
@@ -101,20 +104,24 @@ public class HttpGun {
         }
     }
 
-    @NotNull
+    public static long percentile(List<Long> latencies, double percentile) {
+        latencies.sort(Comparator.comparingLong(Long::longValue));
+        int index = (int) Math.ceil((percentile / (double) 100) * (double) latencies.size());
+        return latencies.get(index - 1);
+    }
+
     private static CommandLineController createController() {
         val parser = new DefaultParser();
-
-        val options = new Options();
-        initOptions(options);
-
         val formatter = new HelpFormatter();
         val provider = new PropertiesFileConfigProvider();
+        val options = createOptions();
 
         return new CommandLineController(parser, options, formatter, provider);
     }
 
-    private static void initOptions(Options options) {
+    private static Options createOptions() {
+        val options = new Options();
+
         options.addOption(
             Option
                 .builder()
@@ -125,6 +132,7 @@ public class HttpGun {
                 .required()
                 .build()
         );
+
         options.addOption(
             Option
                 .builder()
@@ -135,6 +143,7 @@ public class HttpGun {
                 .required()
                 .build()
         );
+
         options.addOption(
             Option
                 .builder()
@@ -145,6 +154,7 @@ public class HttpGun {
                 .required()
                 .build()
         );
+
         options.addOption(
             Option
                 .builder()
@@ -154,5 +164,7 @@ public class HttpGun {
                 .type(Number.class)
                 .build()
         );
+
+        return options;
     }
 }

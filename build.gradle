@@ -12,6 +12,10 @@ repositories {
     mavenCentral()
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     // https://mvnrepository.com/artifact/com.typesafe/config
     compile group: 'com.typesafe', name: 'config', version: '1.4.0'

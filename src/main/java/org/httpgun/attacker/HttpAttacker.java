@@ -67,7 +67,7 @@ public class HttpAttacker {
         }));
 
         pool.shutdown();
-        pool.awaitTermination(termination, TimeUnit.SECONDS);
+        pool.awaitTermination(termination, TimeUnit.MILLISECONDS);
 
         return stats;
     }

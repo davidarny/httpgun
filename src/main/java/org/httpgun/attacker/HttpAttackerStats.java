@@ -49,6 +49,9 @@ public class HttpAttackerStats {
     public long getPercentileBy(double percentile) {
         timers.sort(Comparator.comparingLong(Long::longValue));
         int index = (int) Math.ceil((percentile / (double) 100) * (double) timers.size());
+        if (index == -1) {
+            return 0;
+        }
         return timers.get(index - 1);
     }
 }

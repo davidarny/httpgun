@@ -15,7 +15,7 @@ public class OkHttpCaller implements HttpCaller {
     private long size = 0;
 
     public OkHttpCaller(String url, Long timeout) {
-        client = new OkHttpClient.Builder().callTimeout(timeout, TimeUnit.SECONDS).build();
+        client = new OkHttpClient.Builder().callTimeout(timeout, TimeUnit.MILLISECONDS).build();
         request = new Request.Builder().url(url).build();
     }
 

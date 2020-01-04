@@ -9,6 +9,8 @@ import org.httpgun.caller.OkHttpCallerFactory;
 import org.httpgun.config.ConfigProvider;
 import org.httpgun.config.PropertiesFileConfigProvider;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -17,12 +19,19 @@ public class HttpGun {
     public static final double MILLISECOND = 1000.0;
 
     public static void main(String[] args) {
+        val validator = createValidator();
         val config = new PropertiesFileConfigProvider();
         val controller = createController(config);
         val factory = new OkHttpCallerFactory();
 
         try {
             val options = controller.parse(args);
+
+            val violations = validator.validate(options);
+            if (violations.iterator().hasNext()) {
+                val violation = violations.iterator().next();
+                throw new IllegalArgumentException(violation.getMessage());
+            }
 
             val url = options.getUrl();
             val num = options.getNum();
@@ -47,8 +56,8 @@ public class HttpGun {
             log.info("Total time: {}s", StringUtils.friendlyDouble(total.elapsed(TimeUnit.MILLISECONDS) / MILLISECOND));
             log.info("Total requests: {}", num);
             log.info("Total fails: {}", fails);
-            log.info("Total RPS: {}", StringUtils.friendlyDouble(sum / concurrency / MILLISECOND));
-            log.info("Total bytes transmitted: {}", bytes);
+            log.info("Total RPS: {}", StringUtils.friendlyDouble((double) sum / (double) concurrency / MILLISECOND));
+            log.info("Total bytes transmitted: {}b", bytes);
             if (average.isPresent()) {
                 log.info("Average response time: {}ms", StringUtils.friendlyDouble(average.getAsDouble()));
             }
@@ -124,5 +133,10 @@ public class HttpGun {
         );
 
         return options;
+    }
+
+    private static Validator createValidator() {
+        val factory = Validation.buildDefaultValidatorFactory();
+        return factory.getValidator();
     }
 }

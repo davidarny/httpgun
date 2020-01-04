@@ -8,6 +8,8 @@ import org.httpgun.attacker.HttpAttacker;
 import org.httpgun.caller.OkHttpCallerFactory;
 import org.httpgun.config.ConfigProvider;
 import org.httpgun.config.PropertiesFileConfigProvider;
+import org.httpgun.utils.ErrorUtils;
+import org.httpgun.utils.StringUtils;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -40,7 +42,7 @@ public class HttpGun {
 
             log.info("\n\n==================== ATTACK {} ====================\n", url);
 
-            val attacker = new HttpAttacker(options, config, factory);
+            val attacker = new HttpAttacker(options, factory);
             val stats = attacker.attack();
 
             total.stop();
@@ -57,7 +59,7 @@ public class HttpGun {
             log.info("Total requests: {}", num);
             log.info("Total fails: {}", fails);
             log.info("Total RPS: {}", StringUtils.friendlyDouble((double) sum / (double) concurrency / MILLISECOND));
-            log.info("Total bytes transmitted: {}b", bytes);
+            log.info("Total bytes transmitted: {}", bytes);
             if (average.isPresent()) {
                 log.info("Average response time: {}ms", StringUtils.friendlyDouble(average.getAsDouble()));
             }
@@ -71,10 +73,10 @@ public class HttpGun {
             System.exit(EXIT_SUCCESS);
         } catch (ParseException e) {
             controller.printHelp();
-            log.error(config.get("exception_message_template", String.class), e.getMessage());
+            ErrorUtils.log(e);
         } catch (InterruptedException e) {
-            log.error(config.get("exception_message_template", String.class), e.getMessage());
             Thread.currentThread().interrupt();
+            ErrorUtils.log(e);
         }
     }
 

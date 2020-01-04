@@ -24,8 +24,6 @@ class HttpAttackerTest {
         val timeout = 1000L;
         val options = new HttpGunOptions(url, num, concurrency, timeout);
 
-
-        val config = Mockito.mock(ConfigProvider.class);
         val factory = Mockito.mock(HttpCallerFactory.class);
         val caller = Mockito.mock(HttpCaller.class);
 
@@ -35,7 +33,7 @@ class HttpAttackerTest {
         Mockito.when(caller.size()).thenReturn(requestBytesCount);
         Mockito.when(factory.create(url, timeout)).thenReturn(caller);
 
-        val attacker = new HttpAttacker(options, config, factory);
+        val attacker = new HttpAttacker(options, factory);
         val stats = attacker.attack();
 
         Assertions.assertEquals(stats.getSuccesses(), num);

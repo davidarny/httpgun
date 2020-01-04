@@ -1,4 +1,4 @@
-package org.httpgun;
+package org.httpgun.utils;
 
 import lombok.experimental.UtilityClass;
 

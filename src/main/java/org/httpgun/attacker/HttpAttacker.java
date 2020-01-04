@@ -3,10 +3,10 @@ package org.httpgun.attacker;
 import com.google.common.base.Stopwatch;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.httpgun.utils.ErrorUtils;
 import org.httpgun.HttpGunOptions;
 import org.httpgun.caller.HttpCaller;
 import org.httpgun.caller.HttpCallerFactory;
-import org.httpgun.config.ConfigProvider;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -21,12 +21,11 @@ public class HttpAttacker {
     private final long termination;
     private final LongStream range;
 
-    private final ConfigProvider config;
     private final HttpCaller caller;
 
     private final HttpAttackerStats stats = new HttpAttackerStats();
 
-    public HttpAttacker(HttpGunOptions options, ConfigProvider config, HttpCallerFactory factory) {
+    public HttpAttacker(HttpGunOptions options, HttpCallerFactory factory) {
         val timeout = options.getTimeout();
         val concurrency = options.getConcurrency();
         val num = options.getNum();
@@ -36,7 +35,6 @@ public class HttpAttacker {
         pool = Executors.newFixedThreadPool(concurrency.intValue());
         range = LongStream.range(0, num);
         termination = num / concurrency * timeout;
-        this.config = config;
     }
 
     public HttpAttackerStats attack() throws InterruptedException {
@@ -64,7 +62,7 @@ public class HttpAttacker {
             } catch (IOException e) {
                 watch.stop();
                 stats.incrementFails();
-                log.error(config.get("exception_message_template", String.class), e.getMessage());
+                ErrorUtils.log(e);
             }
         }));
 

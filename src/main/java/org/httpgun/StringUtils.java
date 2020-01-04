@@ -1,9 +1,9 @@
 package org.httpgun;
 
-public class StringUtils {
-    private StringUtils() {
-    }
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
+public class StringUtils {
     public static String friendlyDouble(double value) {
         return String.format("%.2f", value);
     }

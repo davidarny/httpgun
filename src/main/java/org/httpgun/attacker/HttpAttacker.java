@@ -35,7 +35,7 @@ public class HttpAttacker {
         val num = options.getNum();
         val url = options.getUrl();
 
-        caller = factory.create(url, timeout, config);
+        caller = factory.create(url, timeout);
         pool = Executors.newFixedThreadPool(concurrency.intValue());
         range = LongStream.range(0, num);
         termination = num / concurrency * timeout;

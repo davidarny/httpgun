@@ -33,7 +33,7 @@ class HttpAttackerTest {
 
         Mockito.when(caller.call()).thenReturn(new HttpResponse(true));
         Mockito.when(caller.size()).thenReturn(requestBytesCount);
-        Mockito.when(factory.create(url, timeout, config)).thenReturn(caller);
+        Mockito.when(factory.create(url, timeout)).thenReturn(caller);
 
         val attacker = new HttpAttacker(options, config, factory);
         val stats = attacker.attack();

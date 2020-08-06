@@ -36,7 +36,7 @@ dependencies {
     compile group: 'com.typesafe', name: 'config', version: '1.4.0'
 
     // https://mvnrepository.com/artifact/com.google.guava/guava
-    compile group: 'com.google.guava', name: 'guava', version: '28.1-jre'
+    compile group: 'com.google.guava', name: 'guava', version: '29.0-jre'
 
     // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.3.0'

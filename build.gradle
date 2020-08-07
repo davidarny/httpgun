@@ -39,7 +39,7 @@ dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '29.0-jre'
 
     // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
-    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.3.0'
+    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.8.1'
 
     // https://mvnrepository.com/artifact/commons-cli/commons-cli
     compile group: 'commons-cli', name: 'commons-cli', version: '1.4'

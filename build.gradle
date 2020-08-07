@@ -27,7 +27,7 @@ dependencies {
     compile group: 'org.hibernate.validator', name: 'hibernate-validator-annotation-processor', version: '6.1.5.Final'
 
     // https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator
-    compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.1.0.Final'
+    compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.1.5.Final'
 
     // https://mvnrepository.com/artifact/javax.validation/validation-api
     compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
